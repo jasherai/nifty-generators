@@ -16,7 +16,7 @@ else
 end
 
 require 'rubygems'
-gem 'rails', '2.0.2' # getting a Rails.configuration error with 2.1
+gem 'rails', '3.0.0.beta' # getting a Rails.configuration error with 2.1
 gem 'rubigen', '1.4'
 gem 'shoulda', '2.0.6'
 require 'rubigen' # gem install rubigen --version=1.4

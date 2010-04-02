@@ -17,6 +17,7 @@ module Nifty
       class_option :skip_controller, :desc => 'Don\'t generate controller, helper, or views.', :type => :boolean
       class_option :invert, :desc => 'Generate all controller actions except these mentioned.', :type => :boolean
       class_option :haml, :desc => 'Generate HAML views instead of ERB.', :type => :boolean
+      class_option :paginate, :desc => 'Generate will paginate support in scaffold', :type => :boolean 
 
       class_option :testunit, :desc => 'Use test/unit for test files.', :group => 'Test framework', :type => :boolean
       class_option :rspec, :desc => 'Use RSpec for test files.', :group => 'Test framework', :type => :boolean
@@ -92,6 +93,7 @@ module Nifty
 
           if form_partial?
             template "views/#{view_language}/_form.html.#{view_language}", "app/views/#{plural_name}/_form.html.#{view_language}"
+            template "views/#{view_language}/_fields.html.#{view_language}", "app/views/#{plural_name}/_#{singular_name}_fields.html.#{view_language}"
           end
 
           route "resources #{plural_name.to_sym.inspect}"
@@ -154,6 +156,24 @@ module Nifty
         else
           read_template("views/#{view_language}/_form.html.#{view_language}")
         end
+      end
+
+      def render_fields
+        if form_partial?
+          if options.haml?
+            "= render '#{singular_name}_fields', :f => f"
+          else
+            "<%= render '#{singular_name}_fields', :f => f %>"
+          end
+        else
+          read_template("views/#{view_language}/_fields.html.#{view_language}")
+        end
+      end
+
+      def render_pagination
+        if options.paginate?
+	  "will_paginate @#{plural_name}"
+	end
       end
 
       def items_path(suffix = 'path')

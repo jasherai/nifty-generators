@@ -1,10 +1,12 @@
 - title "<%= plural_name.titleize %>"
 
 %table
-  %tr
-    <%- for attribute in model_attributes -%>
-    %th <%= attribute.human_name %>
-    <%- end -%>
+  %thead
+    %tr
+      <%- for attribute in model_attributes -%>
+      %th <%= attribute.human_name %>
+      <%- end -%>
+  %tbody
   - for <%= singular_name %> in @<%= plural_name %>
     %tr
       <%- for attribute in model_attributes -%>
@@ -19,7 +21,11 @@
       <%- if action? :destroy -%>
       %td= link_to 'Destroy', <%= singular_name %>, :confirm => 'Are you sure?', :method => :delete
       <%- end -%>
-
+  <%- if options.paginate? -%>
+  %tfoot
+    %tr
+      %td{:colspan => <%= model_attributes.count %>}= <%= render_pagination %>
+  <%- end -%>
 <%- if actions? :new -%>
 %p= link_to "New <%= singular_name.titleize %>", new_<%= singular_name %>_path
 <%- end -%>
